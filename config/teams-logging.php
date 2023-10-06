@@ -3,9 +3,9 @@
 return [
     /**
      *  Set the level of logging. Available levels: 
-     *  [all, debug, info, notice, warning, error, critical, alert, emergency].
+     *  [debug, info, notice, warning, error, critical, alert, emergency].
      */
-    'teams_logging_level' => env('TEAMS_LOGGING_LEVEL', 'all'),
+    'teams_logging_level' => env('TEAMS_LOGGING_LEVEL', 'debug'),
 
     /**
      * Method of logging:
