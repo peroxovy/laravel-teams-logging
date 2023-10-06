@@ -1,0 +1,23 @@
+{
+    "name": "peroxovy/laravel-teams-logging",
+    "description": "Package that send logs to MS Teams Channels.",
+    "type": "library",
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "9.x-dev",
+        "monolog/monolog": "2.x-dev"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Peroxovy\\LaravelTeamsLogging\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "peroxovy",
+            "email": "piotr.mazur.mail@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
