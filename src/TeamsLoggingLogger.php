@@ -11,7 +11,7 @@ class TeamsLoggingLogger
         return new \Monolog\Logger(
             getenv('APP_NAME'), 
             [ 
-                new TeamsLoggingHandler() 
+                new TeamsLoggingHandler($config['method']) 
             ], 
             [
 

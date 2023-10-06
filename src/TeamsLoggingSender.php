@@ -15,16 +15,16 @@ class TeamsLoggingSender
         $this->webhooks = $webhooks;
     }
 
-    public function send($level, $message)
+    public function send($sendTo, $message)
     {
         $json = json_encode($message);
 
-        $ch = curl_init($this->webhooks[strtolower($level)]);
+        $ch = curl_init($this->webhooks[$sendTo]);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // curl_setopt($ch, CURLOPT_TIMEOUT, $curlOptTimeout);
-        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $curlOptConnectTimeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: ' . strlen($json)

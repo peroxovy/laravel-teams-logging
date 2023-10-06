@@ -22,10 +22,6 @@ class TeamsLoggingServiceProvider extends ServiceProvider
             $this->mergeConfigFrom($config,'teams-logging');
         }
 
-        if($this->stop()){
-            return;
-        }
-
         $this->app->bind('TeamsLogging', function (){
             $teams_logging_level = getenv('TEAMS_LOGGING_LEVEL') ?: $this->app->config->get('teams-logging.teams_logging_level', 'all');
             $teams_logging_method = getenv('TEAMS_LOGGING_METHOD') ?: $this->app->config->get('teams-logging.teams_logging_method', 'single');
