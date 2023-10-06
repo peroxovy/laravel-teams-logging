@@ -3,9 +3,9 @@
     "description": "Package that send logs to MS Teams Channels.",
     "type": "library",
     "require": {
-        "php": "^8.0",
-        "illuminate/support": "9.x-dev",
-        "monolog/monolog": "2.x-dev"
+        "php": ">7.0",
+        "illuminate/support": "9.x",
+        "monolog/monolog": "2.x"
     },
     "license": "MIT",
     "autoload": {
