@@ -1,5 +1,7 @@
 <?php
 
+namespace Peroxovy\LaravelTeamsLogging\Handlers;
+
 class TeamsLoggingHandler extends \Monolog\Handler\AbstractProcessingHandler
 {
     public function __construct()

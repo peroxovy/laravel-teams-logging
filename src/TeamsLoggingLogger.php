@@ -2,7 +2,7 @@
 
 namespace Peroxovy\LaravelTeamsLogging;
 
-use TeamsLoggingHandler;
+use Peroxovy\LaravelTeamsLogging\Handlers\TeamsLoggingHandler;
 
 class TeamsLoggingLogger
 {
@@ -14,7 +14,7 @@ class TeamsLoggingLogger
                 new TeamsLoggingHandler() 
             ], 
             [
-                
+
             ]);
     }
 }
