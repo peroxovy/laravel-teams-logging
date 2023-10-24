@@ -2,21 +2,23 @@
 
 namespace Peroxovy\LaravelTeamsLogging\Helpers;
 
-class TeamsPriorityHelper
+class LevelPriorityHelper
 {
-    public static function priority(string $priority) : int
+    public static function shouldSendMessage(string $debugLevel, string $messageLevel) : int
     {
-        $priorities = [
-            'debug' => 0,
-            'info' => 1,
-            'notice' => 2,
-            'warning' => 3,
+        $priority = [
+            'debug' => 8,
+            'info' => 7,
+            'notice' => 6,
+            'warning' => 5,
             'error' => 4,
-            'critical' => 5,
-            'alert' => 6,
-            'emergency' => 7,
+            'critical' => 3,
+            'alert' => 2,
+            'emergency' => 1
         ];
 
-        return $priorities[$priority] ?? null;
+        $toSend = $priority[$debugLevel] >= $priority[$messageLevel] ? true : false; 
+        
+        return $toSend;
     }
 }

@@ -4,22 +4,17 @@ namespace Peroxovy\LaravelTeamsLogging;
 
 class TeamsLoggingSender
 {
-    private $logging_level;
-    private $logging_method;
-    private $webhooks;
+    private $webhookUrl;
 
-    public function __construct($logging_level = 'all', $logging_method = 'single', $webhooks = [])
+    public function __construct(string $webhookUrl = null)
     {
-        $this->logging_level = $logging_level;
-        $this->logging_method = $logging_method;
-        $this->webhooks = $webhooks;
+        $this->webhookUrl = $webhookUrl;
     }
 
-    public function send($sendTo, $message)
+    public function send($message)
     {
         $json = json_encode($message);
-
-        $ch = curl_init($this->webhooks[$sendTo]);
+        $ch = curl_init($this->webhookUrl);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: ' . strlen($json)
@@ -27,7 +22,7 @@ class TeamsLoggingSender
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
 
 

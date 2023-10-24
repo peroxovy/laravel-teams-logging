@@ -2,59 +2,79 @@
 
 namespace Peroxovy\LaravelTeamsLogging\Handlers;
 
-use Peroxovy\LaravelTeamsLogging\Helpers\TeamsPriorityHelper;
+use Illuminate\Support\Facades\Auth;
+use Peroxovy\LaravelTeamsLogging\Facades\TeamsLogging;
+use Peroxovy\LaravelTeamsLogging\Helpers\LevelPriorityHelper;
+use Peroxovy\LaravelTeamsLogging\Helpers\MessageFormatHelper;
+use Peroxovy\LaravelTeamsLogging\MessageInterface;
+use Peroxovy\LaravelTeamsLogging\TeamsLoggingSender;
 
 class TeamsLoggingHandler extends \Monolog\Handler\AbstractProcessingHandler
 {
-    private $level;
-    private $method;
+    public $lvl;
+    public $method;
+    public $format;
+    public $webhooks;
 
-    public function __construct($level = 'debug', $method = 'single')
+    public function __construct(string $lvl = 'debug', string $method = 'default', string $format = 'default', array $webhooks = [])
     {
         parent::__construct();
-        $this->level = $level;
+        $this->lvl = strtolower($lvl);
         $this->method = $method;
+        $this->format = $format;
+        $this->webhooks = $webhooks;
     }
 
-    protected function getMessage(array $record) : array
+    protected function validateWebhook(string $levelName): string|null
     {
-        return [
-            "@type" => "MessageCard",
-            "@context" => "http://schema.org/extensions",
-            "title" => getenv('APP_NAME') . ' - ' . $record['level_name'],
-            "sections" => [
-                [
-                    "activityTitle" => 'Details:',
-                    "facts" => [
-                        [
-                            "name" => "**Formatted error:",
-                            "value" => '`' . $record["formatted"] . '`',
-                        ]
-                    ]
-                ]
-            ]
-        ];
-    }
 
-    protected function getMethod(string $levelName) : string
-    {
-        if($this->method == 'split')
+        if($this->method !== 'default' && $this->method !== 'split')
         {
-            $method = strtolower($levelName);
-        } else {
-            $method = 'default';
+            throw new \Exception("Webhook sending method not supported. Must be [default or split].");
         }
 
-        return $method;
+        if($this->method == 'default')
+        {
+            if(!array_key_exists('default', $this->webhooks))
+            {
+                throw new \Exception("Webhook variable for [default] is not defined in .env or configuration file.");
+            } else {
+                if($this->webhooks['default'] == null) {
+                    throw new \Exception("Webhook [default] URL value is not defined in .env or configuration file.");
+                } else {
+                    return $this->webhooks['default'];
+                }
+            }
+        }
+
+        if($this->method == 'split')
+        {
+            if(!array_key_exists($this->lvl, $this->webhooks))
+            {
+                throw new \Exception("Webhook variable for [". $this->lvl ."] is not defined in .env or configuration file.");
+            } else {
+                if($this->webhooks[$this->lvl] == null) {
+                    throw new \Exception("Webhook [" . $this->lvl . "] URL value is not defined in .env or configuration file.");
+                } else {
+                    unset($this->webhooks['default']);
+
+                    return $this->webhooks[strtolower($levelName)];
+                }
+            }
+        }
     }
 
     protected function write(array $record): void
     {
-        if($this->level >= TeamsPriorityHelper::priority($this->level))
+        $webhookUrl = $this->validateWebhook($record['level_name']);
+
+        if($webhookUrl !== null && LevelPriorityHelper::shouldSendMessage($this->lvl, strtolower($record['level_name'])))
         {
-            $method = $this->getMethod($record['level_name']);
-            $message = $this->getMessage($record);
-            app('TeamsLogging')->send($method, $message);
+            
+            $message = MessageFormatHelper::getMessage($this->format, $record);
+            // dd($message);
+            $logging = new TeamsLoggingSender($webhookUrl);
+            $logging->send($message);
         }
     }
 }

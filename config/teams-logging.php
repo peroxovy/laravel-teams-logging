@@ -15,6 +15,13 @@ return [
     'teams_logging_method' => env('TEAMS_LOGGING_METHOD', 'single'),
 
     /**
+     * Format of logging:
+     *  - default: logs full details of occured error,
+     *  - simple: logs only message from occured error.
+     */
+    'teams_logging_format' => env('TEAMS_LOGGING_FORMAT', 'default'),
+
+    /**
      * Teams Webhook URL for the default channel.
      */
     'teams_logging_webhook_default' => env('TEAMS_LOGGING_WEBHOOK_DEFAULT', null),

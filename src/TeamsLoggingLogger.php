@@ -2,6 +2,10 @@
 
 namespace Peroxovy\LaravelTeamsLogging;
 
+use Monolog\Processor\GitProcessor;
+use Monolog\Processor\MemoryPeakUsageProcessor;
+use Monolog\Processor\MemoryUsageProcessor;
+use Monolog\Processor\WebProcessor;
 use Peroxovy\LaravelTeamsLogging\Handlers\TeamsLoggingHandler;
 
 class TeamsLoggingLogger
@@ -11,10 +15,13 @@ class TeamsLoggingLogger
         return new \Monolog\Logger(
             getenv('APP_NAME'), 
             [ 
-                new TeamsLoggingHandler($config['method']) 
+                new TeamsLoggingHandler($config['level'], $config['method'], $config['format'], $config['webhooks']) 
             ], 
             [
-
+                new MemoryUsageProcessor(), 
+                new MemoryPeakUsageProcessor(), 
+                new WebProcessor(), 
+                new GitProcessor()
             ]);
     }
 }
