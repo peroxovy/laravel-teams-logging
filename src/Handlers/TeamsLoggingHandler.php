@@ -2,11 +2,8 @@
 
 namespace Peroxovy\LaravelTeamsLogging\Handlers;
 
-use Illuminate\Support\Facades\Auth;
-use Peroxovy\LaravelTeamsLogging\Facades\TeamsLogging;
 use Peroxovy\LaravelTeamsLogging\Helpers\LevelPriorityHelper;
 use Peroxovy\LaravelTeamsLogging\Helpers\MessageFormatHelper;
-use Peroxovy\LaravelTeamsLogging\MessageInterface;
 use Peroxovy\LaravelTeamsLogging\TeamsLoggingSender;
 
 class TeamsLoggingHandler extends \Monolog\Handler\AbstractProcessingHandler
@@ -70,9 +67,7 @@ class TeamsLoggingHandler extends \Monolog\Handler\AbstractProcessingHandler
 
         if($webhookUrl !== null && LevelPriorityHelper::shouldSendMessage($this->lvl, strtolower($record['level_name'])))
         {
-            
             $message = MessageFormatHelper::getMessage($this->format, $record);
-            // dd($message);
             $logging = new TeamsLoggingSender($webhookUrl);
             $logging->send($message);
         }
