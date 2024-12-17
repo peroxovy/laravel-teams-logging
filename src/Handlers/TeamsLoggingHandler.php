@@ -12,14 +12,16 @@ class TeamsLoggingHandler extends \Monolog\Handler\AbstractProcessingHandler
     public $method;
     public $format;
     public $webhooks;
+    public $proxy;
 
-    public function __construct(string $lvl = 'debug', string $method = 'default', string $format = 'default', array $webhooks = [])
+    public function __construct(string $lvl = 'debug', string $method = 'default', string $format = 'default', array $webhooks = [], array $proxy = [])
     {
         parent::__construct();
         $this->lvl = strtolower($lvl);
         $this->method = $method;
         $this->format = $format;
         $this->webhooks = $webhooks;
+        $this->proxy = $proxy;
     }
 
     protected function validateWebhook(string $levelName): string|null
@@ -68,7 +70,7 @@ class TeamsLoggingHandler extends \Monolog\Handler\AbstractProcessingHandler
         if($webhookUrl !== null && LevelPriorityHelper::shouldSendMessage($this->lvl, strtolower($record['level_name'])))
         {
             $message = MessageFormatHelper::getMessage($this->format, $record);
-            $logging = new TeamsLoggingSender($webhookUrl);
+            $logging = new TeamsLoggingSender($webhookUrl, $this->proxy);
             $logging->send($message);
         }
     }

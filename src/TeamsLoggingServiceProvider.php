@@ -34,11 +34,17 @@ class TeamsLoggingServiceProvider extends ServiceProvider
             $webhooks['critical'] = getenv('TEAMS_LOGGING_WEBHOOK_CRITICAL') ?: $this->app->config->get('teams-logging.teams_logging_webhook_critical', null);
             $webhooks['alert'] = getenv('TEAMS_LOGGING_WEBHOOK_ALERT') ?: $this->app->config->get('teams-logging.teams_logging_webhook_alert', null);
             $webhooks['emergency'] = getenv('TEAMS_LOGGING_WEBHOOK_EMERGENCY') ?: $this->app->config->get('teams-logging.teams_logging_webhook_emergency', null);
+            $teams_logging_proxy_url = getenv('TEAMS_LOGGING_PROXY_URL') ?: $this->app->config->get('teams-logging.teams_logging_proxy_url', null);
+            $teams_logging_proxy_user = getenv('TEAMS_LOGGING_PROXY_USER') ?: $this->app->config->get('teams-logging.teams_logging_proxy_user', null);
+            $teams_logging_proxy_password = getenv('TEAMS_LOGGING_PROXY_PASSWORD') ?: $this->app->config->get('teams-logging.teams_logging_proxy_password', null);
         
             return new \Peroxovy\LaravelTeamsLogging\TeamsLoggingSender(
                 $teams_logging_level,
                 $teams_logging_method,
-                $webhooks
+                $webhooks,
+                $teams_logging_proxy_url,
+                $teams_logging_proxy_user,
+                $teams_logging_proxy_password
             );
         });
 
