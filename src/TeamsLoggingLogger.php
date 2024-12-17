@@ -15,7 +15,7 @@ class TeamsLoggingLogger
         return new \Monolog\Logger(
             getenv('APP_NAME'), 
             [ 
-                new TeamsLoggingHandler($config['level'], $config['method'], $config['format'], $config['webhooks']) 
+                new TeamsLoggingHandler($config['level'], $config['method'], $config['format'], $config['webhooks'], $config['proxy']) 
             ], 
             [
                 new MemoryUsageProcessor(), 

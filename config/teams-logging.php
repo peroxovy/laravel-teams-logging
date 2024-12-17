@@ -66,5 +66,20 @@ return [
      */
     'teams_logging_webhook_emergency' => env('TEAMS_LOGGING_WEBHOOK_EMERGENCY', null),
 
+    /**
+     * Proxy URL - if it's set check if authentication to proxy is needed.
+     */
+    'teams_logging_proxy_url' => env('TEAMS_LOGGING_PROXY_URL', null),
+
+    /**
+     * Proxy User - required if authentication to proxy is needed.
+     */
+    'teams_logging_proxy_user' => env('TEAMS_LOGGING_PROXY_USER', null),
+
+    /**
+     * Proxy Password - required if authentication to proxy is needed.
+     */
+    'teams_logging_proxy_password' => env('TEAMS_LOGGING_PROXY_PASSWORD', null)
+
     
 ];

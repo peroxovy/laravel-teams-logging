@@ -5,10 +5,12 @@ namespace Peroxovy\LaravelTeamsLogging;
 class TeamsLoggingSender
 {
     private $webhookUrl;
+    private $proxy;
 
-    public function __construct(string $webhookUrl = null)
+    public function __construct(string $webhookUrl = null, array $proxy = [])
     {
         $this->webhookUrl = $webhookUrl;
+        $this->proxy = $proxy;
     }
 
     public function send($message)
@@ -25,6 +27,14 @@ class TeamsLoggingSender
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
 
+        if (!empty($this->proxy['url'])) {
+            curl_setopt($ch, CURLOPT_PROXY, $this->proxy['url']);
+            
+            if (!empty($this->proxy['user']) && !empty($this->proxy['password'])) {
+                $proxyUserPwd = $this->proxy['user'] . ':' . $this->proxy['password'];
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyUserPwd);
+            }
+        }
 
         $result = curl_exec($ch);
 
